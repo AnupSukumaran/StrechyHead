@@ -1,0 +1,16 @@
+PODS:
+  - MXParallaxHeader (1.0.0)
+
+DEPENDENCIES:
+  - MXParallaxHeader
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - MXParallaxHeader
+
+SPEC CHECKSUMS:
+  MXParallaxHeader: a95e0af1f485b1b718a6939f583f0dbae6992c41
+
+PODFILE CHECKSUM: b1422259a265c02ec71ffe979e324cebf471bc52
+
+COCOAPODS: 1.7.5
