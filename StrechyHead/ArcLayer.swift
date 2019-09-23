@@ -37,19 +37,12 @@ class ArcLayer: UIView {
         path = UIBezierPath()
         path.move(to: CGPoint(x: 0.0, y: 0.0))
         path.addLine(to: CGPoint(x: 0.0, y: self.frame.size.height/2))
-        print("Width = \(self.frame.size.width)")
-        print("Height = \(self.frame.size.height/2 - 700)")
-        
+    
         let geo = archHeightRadiusCreator(recWidth: self.frame.size.width, arcHeight: 50.0)
         
         path.addArc(withCenter: CGPoint(x:self.frame.size.width/2 , y:  self.frame.size.height - geo.radius
         ), radius:  geo.radius, startAngle: geo.startAngle.degreesToRadians, endAngle: geo.endAngle.degreesToRadians, clockwise: false)
-        
-        
-//        path.addArc(withCenter: CGPoint(x:self.frame.size.width/2 , y:  self.frame.size.height/2 - 1500
-//        ), radius:  1537.321, startAngle: CGFloat(97.738).degreesToRadians, endAngle: CGFloat(82.262).degreesToRadians, clockwise: false)
-        
-      //  path.addLine(to: CGPoint(x: self.frame.size.width, y: self.frame.size.height/2))
+
         path.addLine(to: CGPoint(x: self.frame.size.width, y: 0.0))
         
         path.close()
@@ -60,28 +53,16 @@ class ArcLayer: UIView {
         layer.addSublayer(shapeLayer)
     }
     
-    //MARK:
+    //MARK:Theorems Used - Intersecting Chord theorm and Pythagorus theorem 
     func archHeightRadiusCreator(recWidth: CGFloat,arcHeight: CGFloat) -> (radius: CGFloat, startAngle: CGFloat, endAngle: CGFloat) {
         
         let lhs = pow(recWidth/2, 2)
-        print("lhs = \(lhs)")
         let d = lhs / arcHeight
-        print("d = \(d)")
         let diameter = d + arcHeight
-        print("diameter = \(diameter)")
         let radius = diameter/2
-        
         let endAngle = acos((recWidth / 2) / radius).radiansToDegrees
-        print("angle = \(endAngle)")
-        
         let startAngle = CGFloat.pi.radiansToDegrees - endAngle
-        print("startAngle = \(startAngle)")
-//        let startAngle = (.pi.radiansToDegrees) - endAngle
-//         print("startAngle = \(startAngle)")
-        
-        
-        
-        
+
         return (radius,startAngle,endAngle)
     }
     
