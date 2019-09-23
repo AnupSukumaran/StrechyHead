@@ -13,14 +13,17 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var secondHeader: UIView!
+    @IBOutlet weak var secondHeader: ArcLayer!
+    @IBOutlet weak var secondHeaderHeight: NSLayoutConstraint!
     
     private var lastContentOffset: CGFloat = 0
     let corRadius: CGFloat = 420
     var minCurve: CGFloat = 0
     var maxCurve: CGFloat!
     var scrollMovingUp = false
-    // let shapeLayer = CAShapeLayer()
+    var lastVelocityYSign = 0
+    var path: UIBezierPath!
+    var shapeLayer = CAShapeLayer()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,122 +31,88 @@ class ViewController: UIViewController {
         scrollView.parallaxHeader.height = 300
         scrollView.parallaxHeader.mode = .fill
         scrollView.parallaxHeader.minimumHeight = 88
-        
-        print("Width = \(secondHeader.frame.width)")
-//        print("Height = \(headerView.frame.height + 120)")
-//        secondHeader.layer.cornerRadius = headerView.frame.height + 120
-//        maxCurve = headerView.frame.height + 120
-//        let circlePath = UIBezierPath(arcCenter: CGPoint(x: headerView.frame.midX, y: -200), radius: CGFloat(headerView.frame.width), startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
-//
-//
-//        shapeLayer.path = circlePath.cgPath
-//
-//        //change the fill color
-//        shapeLayer.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-//        //you can change the stroke color
-//        shapeLayer.strokeColor = UIColor.red.cgColor
-//        //you can change the line width
-//        shapeLayer.lineWidth = 3.0
-//
-//        headerView.layer.addSublayer(shapeLayer)
+        createRectangle(arcHeight: 25.0)
         
     }
+    
+    func createRectangle(arcHeight: CGFloat) {
+        
+        path = UIBezierPath()
+        path.move(to: CGPoint(x: 0.0, y: 0.0))
+        path.addLine(to: CGPoint(x: 0.0, y: secondHeader.frame.size.height/2))
+    
+        let geo = archHeightRadiusCreator(recWidth: secondHeader.frame.size.width, arcHeight: arcHeight)
+        let xAxis = secondHeader.frame.size.width/2
+        let yAxis = secondHeader.frame.size.height - geo.radius
 
+        path.addArc(withCenter: CGPoint(x: xAxis, y: yAxis), radius:  geo.radius, startAngle: geo.startAngle.degreesToRadians, endAngle: geo.endAngle.degreesToRadians, clockwise: false)
+
+        path.addLine(to: CGPoint(x: secondHeader.frame.size.width, y: 0.0))
+        
+        path.close()
+        
+        shapeLayer.shadowColor = UIColor.black.cgColor
+        shapeLayer.shadowOffset = CGSize(width: 1.0, height: 1.0)
+        shapeLayer.shadowOpacity = 1.0
+        shapeLayer.shadowRadius = 5.0
+        shapeLayer.shouldRasterize = true
+        shapeLayer.rasterizationScale = UIScreen.main.scale
+        shapeLayer.path = path.cgPath
+        shapeLayer.fillColor = #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1)
+        secondHeader.layer.addSublayer(shapeLayer)
+    }
+    
+    
+    
+    
+    //MARK:Theorems Used - Intersecting Chord theorm and Pythagorus theorem
+    func archHeightRadiusCreator(recWidth: CGFloat,arcHeight: CGFloat) -> (radius: CGFloat, startAngle: CGFloat, endAngle: CGFloat) {
+        
+        let lhs = pow(recWidth/2, 2)
+        let d = lhs / arcHeight
+        let diameter = d + arcHeight
+        let radius = diameter/2
+        let endAngle = acos((recWidth / 2) / radius).radiansToDegrees
+        let startAngle = CGFloat.pi.radiansToDegrees - endAngle
+
+        return (radius,startAngle,endAngle)
+    }
 
 }
 
 extension ViewController: UIScrollViewDelegate {
-    
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        let translation = scrollView.panGestureRecognizer.translation(in: scrollView.superview)
-        if translation.y > 0 {
-          //   print("moveingDown")
-             scrollMovingUp = false
-            // swipes from top to bottom of screen -> down
-        } else {
-           //  print("moveingUp")
-            scrollMovingUp = true
-            // swipes from bottom to top of screen -> up
-        }
-    }
-    
+       
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        let offsetY = CGFloat(max(-(scrollView.contentOffset.y + scrollView.contentInset.top), 0.0))
-//        self.progress = min(max(offsetY / frame.size.height, 0.0), 1.0)
-//         print("headerView.frame.height = \(headerView.frame.height)")
-//        let offset = scrollView.contentOffset.y
-//       // let offset = headerView.frame.height - (y + headerView.frame.height)
-//  //      let totalScroll: CGFloat = scrollView.contentSize.height - scrollView.bounds.size.height
-//
-//       // let tt = offset / totalScroll
-//    //    print("totalScroll = \(totalScroll)")
-//
-//
-//      //  let offset = scrollView.contentOffset.y
-//        print("offset = \(offset)")
-//        if scrollMovingUp {
-//            //decrease the curve
-////            let newVal =  min(max(offset, 0), maxCurve)
-////            print("newValUp  \(newVal)")
-//           // if tt > 0 {
-//               // print("vall = \(maxCurve / tt)")
-//            let valUp = max(headerView.frame.height, 0)
-//            print("valUp = \(valUp)")
-//            secondHeader.layer.cornerRadius =  valUp
-//           // secondHeader.layer.cornerRadius = secondHeader.layer.cornerRadius - (maxCurve / totalScroll)
-////            UIView.animate(withDuration: 0.5) {
-////                self.view.layoutIfNeeded()
-////            }
-//           // }
-//
-//        } else {
-//           // increase the curve
-//           // let newVal = min(0, abs(offset) )
-//          //  print("newValDown  \(newVal)")
-//           // secondHeader.layer.cornerRadius = newVal
-//
-//            let valDown = min(400, headerView.frame.height)
-//            print("valDown = \(valDown)")
-//            secondHeader.layer.cornerRadius =  valDown + (400 - valDown)
-////            if headerView.frame.height < 400 {
-////
-////                secondHeader.layer.cornerRadius =  min(400, headerView.frame.height)
-////            } else {
-////                 secondHeader.layer.cornerRadius = 400
-////            }
-//
-////            UIView.animate(withDuration: 0.5) {
-////                self.view.layoutIfNeeded()
-////            }
-//
-//        }
-//
-    //    secondHeader.layer.cornerRadius = 0
-//
-//        let offset = scrollView.contentOffset.y
-//      //  print("offset = \(offset)")
-//
-//        if (self.lastContentOffset > offset) {
-//            print("moveUp")
-//        } else if (self.lastContentOffset < offset) {
-//             print("moveDown")
-//            // move down
-//        }
-//
-//        // update the new position acquired
-//        self.lastContentOffset = scrollView.contentOffset.y
+
+        secondHeaderHeight.constant = headerView.frame.height
+
+        let currentVelocityY =  scrollView.panGestureRecognizer.velocity(in: scrollView.superview).y
+        let currentVelocityYSign = Int(currentVelocityY).signum()
         
-//        if offset < 0 {
-//            print("increase the Curve = \(offset)")
-//            if secondHeader.layer.cornerRadius
-//
-//        } else {
-//            print("Decrease Curve = \(offset)")
-//        }
-//
-        //secondHeader.frame.height =
-//        let circlePath = UIBezierPath(arcCenter: CGPoint(x: headerView.frame.midX, y: -200), radius: CGFloat(headerView.frame.width), startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
-//        shapeLayer.path = circlePath.
+        if currentVelocityYSign != lastVelocityYSign && currentVelocityYSign != 0 {
+               lastVelocityYSign = currentVelocityYSign
+        }
+        
+        if lastVelocityYSign < 0 {
+           
+            if (headerView.frame.height/12) <= 8 {
+                createRectangle(arcHeight: 1)
+            } else {
+                createRectangle(arcHeight: headerView.frame.height/12)
+            }
+            
+         
+        } else if lastVelocityYSign > 0 {
+
+             if (headerView.frame.height/12) >= 8 {
+                createRectangle(arcHeight: (headerView.frame.height/12))
+             } else {
+                createRectangle(arcHeight: 1)
+             }
+            
+        }
+        
+
     }
 }
 

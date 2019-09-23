@@ -49,7 +49,8 @@
                     <connections>
                         <outlet property="headerView" destination="3g1-52-Bfl" id="dTv-Ky-aEo"/>
                         <outlet property="scrollView" destination="A7R-ED-MSS" id="Yky-wF-fIZ"/>
-                        <outlet property="secondHeader" destination="tXe-uv-Yrq" id="mCZ-pS-LQY"/>
+                        <outlet property="secondHeader" destination="tXe-uv-Yrq" id="8QN-o0-kO5"/>
+                        <outlet property="secondHeaderHeight" destination="V5l-kz-IEn" id="24J-WO-GjN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -57,17 +58,19 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="300"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tXe-uv-Yrq" customClass="ArcLayer" customModule="StrechyHead" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="-30" width="414" height="300"/>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tXe-uv-Yrq">
+                            <rect key="frame" x="0.0" y="-17" width="414" height="300"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="300" id="V5l-kz-IEn"/>
+                            </constraints>
                         </view>
                     </subviews>
                     <color key="backgroundColor" red="0.99942404029999998" green="0.98555368190000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
-                        <constraint firstItem="tXe-uv-Yrq" firstAttribute="width" secondItem="3g1-52-Bfl" secondAttribute="width" id="5gQ-df-Y9J"/>
-                        <constraint firstItem="tXe-uv-Yrq" firstAttribute="height" secondItem="3g1-52-Bfl" secondAttribute="height" id="KSz-Jc-mJJ"/>
-                        <constraint firstItem="tXe-uv-Yrq" firstAttribute="centerX" secondItem="3g1-52-Bfl" secondAttribute="centerX" id="RVi-1J-E5D"/>
-                        <constraint firstItem="tXe-uv-Yrq" firstAttribute="centerY" secondItem="3g1-52-Bfl" secondAttribute="centerY" multiplier="0.8" id="VPD-bc-jNs"/>
+                        <constraint firstItem="dkV-FU-pk6" firstAttribute="bottom" secondItem="tXe-uv-Yrq" secondAttribute="bottom" constant="17" id="NNK-1l-piI"/>
+                        <constraint firstItem="tXe-uv-Yrq" firstAttribute="centerX" secondItem="3g1-52-Bfl" secondAttribute="centerX" id="V7B-Zk-pCr"/>
+                        <constraint firstItem="tXe-uv-Yrq" firstAttribute="width" secondItem="3g1-52-Bfl" secondAttribute="width" id="fDf-3B-seG"/>
                     </constraints>
                     <viewLayoutGuide key="safeArea" id="dkV-FU-pk6"/>
                 </view>

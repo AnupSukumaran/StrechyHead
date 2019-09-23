@@ -13,6 +13,7 @@ import QuartzCore
 class ArcLayer: UIView {
     
     var path: UIBezierPath!
+    var shapeLayer = CAShapeLayer()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -38,22 +39,26 @@ class ArcLayer: UIView {
         path.move(to: CGPoint(x: 0.0, y: 0.0))
         path.addLine(to: CGPoint(x: 0.0, y: self.frame.size.height/2))
     
-        let geo = archHeightRadiusCreator(recWidth: self.frame.size.width, arcHeight: 50.0)
+        let geo = archHeightRadiusCreator(recWidth: self.frame.size.width, arcHeight: 25.0)
+        let xAxis = self.frame.size.width/2
+        let yAxis = self.frame.size.height - geo.radius
         
-        path.addArc(withCenter: CGPoint(x:self.frame.size.width/2 , y:  self.frame.size.height - geo.radius
-        ), radius:  geo.radius, startAngle: geo.startAngle.degreesToRadians, endAngle: geo.endAngle.degreesToRadians, clockwise: false)
+        print("J-xAxis = \(xAxis)")
+        print("J-yAxis = \(yAxis)")
+        
+        path.addArc(withCenter: CGPoint(x: xAxis, y: yAxis), radius:  geo.radius, startAngle: geo.startAngle.degreesToRadians, endAngle: geo.endAngle.degreesToRadians, clockwise: false)
 
         path.addLine(to: CGPoint(x: self.frame.size.width, y: 0.0))
         
         path.close()
         
-        let shapeLayer = CAShapeLayer()
+      
         shapeLayer.path = path.cgPath
         shapeLayer.fillColor = #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1)
         layer.addSublayer(shapeLayer)
     }
     
-    //MARK:Theorems Used - Intersecting Chord theorm and Pythagorus theorem 
+    //MARK:Theorems Used - Intersecting Chord theorm and Pythagorus theorem
     func archHeightRadiusCreator(recWidth: CGFloat,arcHeight: CGFloat) -> (radius: CGFloat, startAngle: CGFloat, endAngle: CGFloat) {
         
         let lhs = pow(recWidth/2, 2)
